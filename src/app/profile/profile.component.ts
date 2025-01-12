@@ -4,12 +4,12 @@ import { environment } from 'src/environments/environment';
 import { DefaultBackendService } from '../service/default-backend.service';
 import { CommonModule } from '@angular/common';
 import { MsalService } from '@azure/msal-angular';
+import { jwtDecode } from "jwt-decode";
+
 
 type ProfileType = {
-  givenName?: string;
-  surname?: string;
-  userPrincipalName?: string;
-  id?: string;
+  name?: string;
+  preferred_username?: string;
 };
 
 @Component({
@@ -30,9 +30,44 @@ export class ProfileComponent implements OnInit {
   }
 
   getProfile(url: string) {
-    this.http.get(url).subscribe((profile) => {
-      this.profile = profile;
-    });
+    // Obtener el token del localStorage
+    const token = localStorage.getItem('jwt');
+  
+    if (token) {
+      try {
+        // Decodificar el token sin usar jwt-decode (usando la función decodeTokenBase64Url)
+        const decodedToken: any = this.decodeTokenBase64Url(token);
+  
+        // Extraer los datos deseados
+        this.profile = {
+          name: decodedToken.name,
+          preferred_username: decodedToken.preferred_username,
+        };
+  
+        console.log('Perfil decodificado:', this.profile);
+      } catch (error) {
+        console.error('Error al decodificar el token:', error);
+      }
+    } else {
+      console.error('No se encontró ningún token en el localStorage.');
+    }
+  }
+  
+  private decodeTokenBase64Url(token: string): any {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => `%${c.charCodeAt(0).toString(16).padStart(2, '0')}`)
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      console.error('Error al decodificar el token:', error);
+      return null;
+    }
   }
   llamarBackend(): void {
     this.backendService.consumirBackend().subscribe(response => {

@@ -124,7 +124,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.authService.instance.setActiveAccount(response.account);
   
           // Obtener y guardar el token de acceso
-          this.authService.acquireTokenSilent({ scopes: [] }).subscribe({
+          this.authService.acquireTokenSilent({ scopes: ['User.Read'] }).subscribe({
             next: (tokenResponse) => {
               localStorage.setItem('jwt', tokenResponse.idToken); // Guarda el token en el localStorage
               console.log('ID token guardado en localStorage:', tokenResponse.idToken);
@@ -144,7 +144,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.authService.acquireTokenSilent({ scopes: ['User.Read'] }).subscribe({
             next: (tokenResponse) => {
               localStorage.setItem('jwt', tokenResponse.accessToken);
-              console.log('Access token guardado en localStorage:', tokenResponse.accessToken);
+              console.log('ID token guardado en localStorage:', tokenResponse.accessToken);
             },
             error: (error) => {
               console.error('Error obteniendo el token de acceso:', error);

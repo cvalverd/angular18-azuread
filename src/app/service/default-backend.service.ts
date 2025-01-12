@@ -6,15 +6,20 @@ import { Injectable } from '@angular/core';
 })
 export class DefaultBackendService {
 
-  constructor(private http: HttpClient) { }
-
-  httpOptions = {
+  private apiUrl = 'https://15pe79tui0.execute-api.us-east-1.amazonaws.com/';
+  private httpOptions = {
     headers: new HttpHeaders({
-      
-    })
+      'Content-Type': 'application/json',
+    }),
   };
-  
+
+  constructor(private http: HttpClient) {}
+
   public consumirBackend() {
-    return this.http.get('http://localhost:8080/bff/123', this.httpOptions);
+    const body = {
+      key: 'Hola mundo'
+    };
+
+    return this.http.post(this.apiUrl, body, this.httpOptions);
   }
 }
