@@ -141,7 +141,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.authService.instance.setActiveAccount(response.account);
   
           // Obtener y guardar el token de acceso
-          this.authService.acquireTokenSilent({ scopes: [] }).subscribe({
+          this.authService.acquireTokenSilent({ scopes: ['User.Read'] }).subscribe({
             next: (tokenResponse) => {
               localStorage.setItem('jwt', tokenResponse.accessToken);
               console.log('Access token guardado en localStorage:', tokenResponse.accessToken);

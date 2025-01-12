@@ -15,6 +15,6 @@ export class DefaultBackendService {
   };
   
   public consumirBackend() {
-    return this.http.get('http://localhost:8080/mensaje', this.httpOptions);
+    return this.http.get('http://localhost:8080/bff/123', this.httpOptions);
   }
 }
